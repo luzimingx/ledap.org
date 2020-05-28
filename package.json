@@ -1,0 +1,25 @@
+{
+  "name": "ledap.org",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "serve": "vuepress dev src",
+    "build": "vuepress build src",
+    "deploy": "sh ./script/deploy.sh"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ethercap/ledap.org.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ethercap/ledap.org/issues"
+  },
+  "homepage": "https://github.com/ethercap/ledap.org#readme",
+  "devDependencies": {
+    "vuepress": "^1.5.0"
+  }
+}
