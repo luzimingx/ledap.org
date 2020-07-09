@@ -47,7 +47,7 @@ module.exports = {
                 sidebarDepth: 2,
                 children: [
                     ['/api/Event/', 'Event'],
-                    ['/api/Base/', 'BaseObject'],
+                    ['/api/base/', 'BaseObject'],
                     ['/api/Model/', 'Model'],
                     ['/api/DataProvider/', 'DataProvider'],
                     ['/api/WebDataProvider/', 'WebDataProvider'],

@@ -1,5 +1,5 @@
 # form-item
-form-item 组件代表单个表单元素，主体部分默认为 input，可以通过 slot 替换为 textarea、radio、checkbox 等。它创造性的将 label、表单、error 结合在一起，你需要做的仅仅是将一个 [Model](/api/model/#获取实例) 实例和某个属性值传入该组件，双绑、validate 都会自动工作。
+form-item 组件代表单个表单元素，主体部分默认为 input，可以通过 slot 替换为 radio、checkbox、searchinput 等。它将 label、validate、error 等工作流结合在一起，你需要做的仅仅是将一个 [model](/api/Model/#获取实例) 和 attr 传入该组件，一切都会自动工作。
 
 
 ## Attributes
@@ -51,14 +51,14 @@ form-item 的默认表单元素是 input，因此你可以向其传入所有 inp
 |focus|获得焦点|\(event: Event\)|
 
 
-## 示例
+## [示例](https://widget.ethercap.com/ledap/default/form-item)
 ```vue
 <template lang="html">
 <div>
-    <form-item :model="model" attr="phone"></form-item>
-    <form-item :model="model" attr="name" maxlength="10">
+    <form-item :model="model" attr="name"></form-item>
+    <form-item :model="model" attr="introduce" maxlength="100">
         <template v-slot="slotProps">
-            <baseinput v-bind="slotProps" tag="textarea" rows="8"></baseinput>
+            <baseinput v-bind="slotProps" tag="textarea" rows="10"></baseinput>
         </template>
     </form-item>
     <button @click="submit">提交</button>
@@ -72,50 +72,50 @@ const App = Ledap.App;
 export default {
     data() {
         return {
-            model: App.getModel()
+            model: App.getModel({
+                name: '',
+                introduce: ''
+            })
         }
     },
     created() {
-        App.request({
-            // 这里是一些请求参数
-        }, data => {
-            // data格式如下
-            /* {
-                name: {
-                    label: '姓名',
-                    hint: '请输入姓名',
-                    value: '',
-                    rules: [{
-                        type: 'string',
-                        options: {
-                            message: '姓名必须是一条字符串。',
-                            skipOnEmpty: 1,
-                        }
-                    }]
-                },
-                phone: {
-                    label: '手机号',
-                    hint: '请输入手机号',
-                    value: '',
-                    rules: [{
-                        type: 'string',
-                        options: {
-                            message: '姓名必须是一条字符串。',
-                            skipOnEmpty: 1,
-                        }
-                    }, {
-                        type: 'match',
-                        options: {
-                            message: "请输入正确的手机号码",
-                            not: false,
-                            pattern: "/^1[3-9]{1}\d{9}$/",
-                            skipOnEmpty: 1
-                        }
-                    }]
-                }
-            } */
-            this.model.load(data);
-        });
+        // data 也可以是后端接口返回
+        const data = {
+            name: {
+                label: '姓名',
+                hint: '请输入姓名',
+                value: '',
+                rules: [{
+                    type: 'string',
+                    options: {
+                        max: 5,
+                        message: '姓名必须是一条字符串。',
+                        skipOnEmpty: 1,
+                        tooLong: '姓名只能包含至多5个字符。'
+                    }
+                }, {
+                    type: 'required',
+                    options: {
+                        message: '请填写姓名'
+                    }
+                }]
+            },
+            introduce: {
+                label: '简介',
+                hint: '请输入简介',
+                value: '',
+                rules: [{
+                    type: 'string',
+                    options: {
+                        max: 200,
+                        message: '姓名必须是一条字符串。',
+                        skipOnEmpty: 1,
+                        tooLong: '姓名只能包含至多200个字符。'
+                    }
+                }]
+            }
+        };
+        this.model.load(data);
     },
     methods: {
         submit() {

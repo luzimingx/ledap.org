@@ -60,8 +60,8 @@ event.off('some-event', handler);
 ### Event.emit(name[, value1, value2, ...])
 - 详细：见 [event.emit](#event-emit-name-value1-value2)
 
-### event.off(name, handler[, context])
+### Event.off(name, handler[, context])
 - 详细：见 [event.off](#event-off-name-handler-context)
 
-### event.once(name, handler[, context])
+### Event.once(name, handler[, context])
 - 详细：见 [event.once](#event-once-name-handler-context)

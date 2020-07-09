@@ -1,5 +1,5 @@
 # grid
-grid 组件为表格组件。
+grid 组件为表格组件，需要传如 dataProvider 和 columns，组件即可工作。
 
 ## Attributes
 |属性|类型|默认值|是否必填|说明|
@@ -26,11 +26,11 @@ grid 组件为表格组件。
 |style|String \| Object|增加的 style|
 
 
-## 示例
+## [示例](https://widget.ethercap.com/ledap/default/grid)
 ```vue
 <template lang="html">
 <div>
-    <grid :data-provider=dp :columns=columns></grid>
+    <grid class="table table-striped" :data-provider="dp" :columns="columns"></grid>
 </div>
 </template>
 
@@ -41,54 +41,39 @@ const DataProvider = Ledap.DataProvider;
 export default {
     data() {
         return {
-            dp: new DataProvider({}),
-            asc : true,
-            columns: {
-                "id", // 第一列的 label 将是 'id'
-                {
-                    "attribute": "name",
-                    "labelFormat" : "html",
-                    "label" : function(model, attribute) {
-                        // 使用 vm 指向本页面实例
-                        return '<div @click="vm.toggle">姓名：<span>{{vm.asc ? "^" : "v"}}</span></div>';
-                    },
-                    labelOptions: {
-                        attrs: { t: 'test' },
-                        class: ['ca', 'cb'],
-                        style: { color: 'green' }
+            asc: true,
+            dp: ledap.App.getWebDp({
+                httpOptions: {
+                    url: '/ledap/lesson/search',
+                    params: {
+                        'per-page': 5
                     }
+                }
+            }),
+            columns: [{
+                attribute: 'id',
+                labelFormat: 'html',
+                "label": function(model, attribute) {
+                    // 使用 vm 指向本页面实例
+                    return '<div @click="vm.toggle">ID<span>{{vm.asc ? "^" : "v"}}</span></div>';
                 },
-                {
-                    "attribute":"email",
-                    "label" : "邮箱",
-                    "useSort" : true,
-                    "value" : function(model, attribute, index){
-                        return '<div>邮箱：{{model.email}}</div>';
-                    },
-                    "format" : "html",
-                },
-            }
+                labelOptions: {
+                    style: { color: 'green' }
+                }
+            }, {
+                attribute: 'text',
+                label: '名称'
+            }]
         }
     },
-    created() {
-        const data = {
-            items: [{
-                id: 1,
-                name: '张三',
-                email: 'zhangsan@e.com'
-            }, {
-                id: 2,
-                name: '李四',
-                email: 'lisi@e.com'
-            }]
-        };
-        this.dp.load(data);
+    created: function() {
+        this.dp.refresh();
     },
     methods: {
-        toogle() {
+        toggle: function() {
             this.asc = !this.asc;
-            this.dp.sortModels("name", this.asc);
-        }
+            this.dp.sortModels("id", this.asc);
+        },
     }
 }
 </script>

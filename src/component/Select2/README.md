@@ -1,5 +1,5 @@
 # select2
-select2 组件代表搜索输入选择框组件，输入文字，出现下拉推荐列表，与 [searchinput](/component/SearchInput/#searchinput) 不同的是，这个组件必须选择推荐列表中的选项。
+select2 组件代表搜索输入选择框组件，输入文字，出现下拉推荐列表，只需要传入 [model](/api/Model) 和 [webDataProvider](/api/WebDataProvider)，整个组件会自动工作，支持单选和多选；与 [searchinput](/component/SearchInput/#searchinput) 不同的是，这个组件必须选择推荐列表中的选项。
 
 ## Attributes
 你可以向其传入所有 input 的合法属性。
@@ -36,16 +36,23 @@ select2 组件代表搜索输入选择框组件，输入文字，出现下拉推
 |focus|获得焦点|event: Event|
 
 
-## 示例
+## [示例](https://widget.ethercap.com/ledap/default/select2)
 ```vue
 <template lang="html">
 <div>
-    <form-item :model="model" attr="abstract">
+    <form-item class="form-group" :model="model" attr="search1">
         <template v-slot="p">
-            <searchinput v-bind="p" :data-provider="dp" @choose="choose">
-            </searchinput>
+            <select2 v-bind="p" :data-provider="dp" @choose="choose" item-name="text">
+            </select2>
         </template>
     </form-item>
+    <form-item class="form-group" :model="model" attr="search2">
+        <template v-slot="p">
+            <select2 v-bind="p" :data-provider="dp" @choose="choose" :multiple="true" item-name="text">
+            </select2>
+        </template>
+    </form-item>
+    <button @click="submit">提交</button>
 </div>
 </template>
 
@@ -56,36 +63,74 @@ const App = Ledap.App;
 export default {
     data() {
         return {
+            model: App.getModel({
+                search1: '',
+                search2: ''
+            }),
             dp: App.getWebDp({
-                httpOptions: { url: 'xxx' },
+                httpOptions: { url: '/ledap/lesson/search' },
             }),
             /* 返回的数据格式如下： */
             /* {
                 "items" : [{
                     "id" : 1,            // 作为选中标识
-                    "text" : "Li Lei"    // 作为选中展示信息
+                    "text" : "数学"    // 作为选中展示信息
                 }, {
                     "id" : 2,
-                    "text" : "Hanmeimei"
+                    "text" : "语文"
                 }, {
                     "id" : 3,
-                    "text" : "Lily"
+                    "text" : "英语"
                 }, {
                     "id" : 4,
-                    "text" : "Lucy"
+                    "text" : "化学"
                 }],
                 "meta":{
                     "currentPage":1,
                     "pageCount":3,
                     "perPage":4,
-                    "totalCount":20
+                    "totalCount":10
                 },
                 "sort":[]
             } */
     },
+    created() {
+        // data 也可以是后端接口返回
+        var data = {
+            search1: {
+                label: '搜索1',
+                hint: '请输入关键词',
+                value: '',
+                rules: [{
+                    type: 'required',
+                    options: {
+                        message: '搜索不能为空'
+                    }
+                }]
+            },
+            search2: {
+                label: '搜索2',
+                hint: '请输入关键词',
+                value: '',
+                rules: [{
+                    type: 'required',
+                    options: {
+                        message: '搜索不能为空'
+                    }
+                }]
+            }
+        };
+        this.model.load(data);
+    },
     methods: {
         choose(model, index, event) {
             // do something here
+        },
+        submit() {
+            this.model.validate();
+            if (!this.model.hasError()) {
+                // 将 this.model 提交
+            }
         }
     }
 }

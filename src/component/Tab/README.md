@@ -1,5 +1,5 @@
 # tab
-tab 代表选项卡组件，一般需要被 [groupinput](/component/GroupInput/) 管理。
+tab 代表选项卡组件，一般需要被 [groupinput](/component/GroupInput/) 组件管理，可设定能否取消选择和是否禁用。
 
 ## Attributes
 |属性|类型|默认值|是否必填|说明|
@@ -14,7 +14,7 @@ tab 代表选项卡组件，一般需要被 [groupinput](/component/GroupInput/)
 #### default
 - 说明：默认插槽，tab 的文字描述。
 
-## 示例
+## [示例](https://widget.ethercap.com/ledap/default/tab)
 ```vue
 <template lang="html">
 <div>
@@ -24,6 +24,7 @@ tab 代表选项卡组件，一般需要被 [groupinput](/component/GroupInput/)
             <groupinput v-bind="p"></groupinput>
         </template>
     </form-item>
+    <button @click="submit">提交</button>
 </div>
 </template>
 
@@ -34,43 +35,53 @@ const App = Ledap.App;
 export default {
     data() {
         return {
-            model: App.getModel()
+            model: App.getModel({
+                city: ''
+            })
         }
     },
-    created() {
-        App.request({
-            // 这里是一些请求参数
-        }, data => {
-            // data格式如下
-            /* {
-                "city": {
-                    "label": "常驻城市",
-                    "rules": [{
-                        "type": "dict",
-                        "options": {
-                            "list": {
-                                "北京": "北京",
-                                "上海": "上海",
-                                "杭州": "杭州",
-                                "成都": "成都",
-                                "武汉": "武汉",
-                                "南京": "南京",
-                                "厦门": "厦门",
-                                "其他": "其他",
-                            },
-                            "order": ["北京", "上海", "杭州", "成都", "武汉", "南京", "厦门", "其他"],
-                            "multiple": true,
-                            "excludes" : ["武汉"],
-                            "max" : 3,
-                            "message": "常驻城市的值不正确",
-                            "skipOnEmpty": 1
-                        }
-                    }],
-                    "value": ["成都", "杭州"]
-                },
-            } */
-            this.model.load(data);
-        });
+    created: function() {
+        // data 也可以是后端接口返回
+        var data = {
+            city: {
+                label: '常驻城市',
+                rules: [{
+                    type: 'dict',
+                    options: {
+                        list: {
+                            '上海': '上海',
+                            '北京': '北京',
+                            '杭州': '杭州',
+                            '成都': '成都',
+                            '武汉': '武汉',
+                            '南京': '南京',
+                            '厦门': '厦门',
+                            '其他': '其他',
+                        },
+                        order: ['北京', '上海', '杭州', '成都', '武汉', '南京', '厦门', '其他'],
+                        multiple: true,
+                        excludes: ['其他'],
+                        max: 3,
+                        message: '常驻城市的值不正确',
+                        skipOnEmpty: 1
+                    }
+                }, {
+                    type: 'required',
+                    options: {
+                        message: '请填写常驻城市'
+                    }
+                }],
+                'value': ['成都', '杭州']
+            }
+        };
+        this.model.load(data);
+    },
+    methods: {
+        submit: function() {
+            this.model.validate();
+            if (this.model.hasErrors()) return;
+            alert('提交的数据是：' + JSON.stringify(this.model));
+        }
     }
 }
 </script>

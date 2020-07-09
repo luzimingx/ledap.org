@@ -1,5 +1,5 @@
 # searchinput
-searchinput 组件代表搜索输入框组件，输入文字，出现下拉推荐列表。
+searchinput 组件代表搜索输入框组件，输入文字，出现下拉推荐列表，只需要传入 [model](/api/Model) 和 [webDataProvider](/api/WebDataProvider)，整个组件会自动工作。
 
 ## Attributes
 你可以向其传入所有 input 的合法属性。
@@ -33,16 +33,17 @@ searchinput 组件代表搜索输入框组件，输入文字，出现下拉推�
 |focus|获得焦点|event: Event|
 
 
-## 示例
+## [示例](https://widget.ethercap.com/ledap/default/searchinput)
 ```vue
 <template lang="html">
 <div>
-    <form-item :model="model" attr="abstract">
+    <form-item class="form-group" :model="model" attr="search">
         <template v-slot="p">
-            <searchinput v-bind="p" :data-provider="dp" @choose="choose">
+            <searchinput v-bind="p" :data-provider="dp" @choose="choose" item-name="text">
             </searchinput>
         </template>
     </form-item>
+    <button @click="submit">提交</button>
 </div>
 </template>
 
@@ -53,37 +54,62 @@ const App = Ledap.App;
 export default {
     data() {
         return {
+            model: App.getModel({
+                search: ''
+            }),
             dp: App.getWebDp({
-                httpOptions: { url: 'xxx' },
+                httpOptions: { url: '/ledap/lesson/search' },
             }),
             /* 返回的数据格式如下： */
             /* {
                 "items" : [{
                     "id" : 1,
-                    "text" : "Li Lei"    // 作为选中展示信息
+                    "text" : "语文"    // 作为选中展示信息
                 }, {
                     "id" : 2,
-                    "text" : "Hanmeimei"
+                    "text" : "数学"
                 }, {
                     "id" : 3,
-                    "text" : "Lily"
+                    "text" : "英语"
                 }, {
                     "id" : 4,
-                    "text" : "Lucy"
+                    "text" : "化学"
                 }],
                 "meta":{
                     "currentPage":1,
                     "pageCount":3,
                     "perPage":4,
-                    "totalCount":20
+                    "totalCount":10
                 },
                 "sort":[]
             } */
         }
     },
+    created: function() {
+        // data 也可以是后端接口返回
+        var data = {
+            search: {
+                label: '搜索',
+                hint: '请输入关键词',
+                value: '',
+                rules: [{
+                    type: 'required',
+                    options: {
+                        message: '搜索不能为空'
+                    }
+                }]
+            }
+        };
+        this.model.load(data);
+    },
     methods: {
         choose(model, index, event) {
             // do something here
+        },
+        submit: function() {
+            this.model.validate();
+            if (this.model.hasErrors()) return;
+            alert('提交的数据是：' + JSON.stringify(this.model));
         }
     }
 }

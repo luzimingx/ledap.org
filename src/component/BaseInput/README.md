@@ -1,5 +1,5 @@
 # baseinput
-baseinput 组件代表输入框，默认为 input，可以通过 tag 属性改为 textarea。
+baseinput 组件代表输入框，传入 model 和 attr，就可以具备校验等功能，开发者只需要关注数据层面的 model；该组件有两种形态：input（默认值） 和 textarea，通过 tag 属性来控制。
 
 ## Attributes
 你可以向其传入所有 input、textarea 的合法属性。
@@ -18,15 +18,21 @@ baseinput 组件代表输入框，默认为 input，可以通过 tag 属性改�
 |focus|获得焦点|\(event: Event\)|
 
 
-## 示例
+## [示例](https://widget.ethercap.com/ledap/default/baseinput)
 ```vue
 <template lang="html">
 <div>
-    <form-item :model="model" attr="abstract" maxlength="100">
+    <form-item :model="model" attr="name">
         <template v-slot="slotProps">
-            <baseinput v-bind="slotProps" tag="textarea" rows="8"></baseinput>
+            <baseinput v-bind="slotProps" maxlength="6"></baseinput>
         </template>
     </form-item>
+    <form-item :model="model" attr="introduce">
+        <template v-slot="slotProps">
+            <baseinput v-bind="slotProps" tag="textarea" rows="10"></baseinput>
+        </template>
+    </form-item>
+    <button @click="submit">提交</button>
 </div>
 </template>
 
@@ -37,30 +43,56 @@ const App = Ledap.App;
 export default {
     data() {
         return {
-            model: App.getModel()
+            model: App.getModel({
+                name: '',
+                introduce: ''
+            })
         }
     },
     created() {
-        App.request({
-            // 这里是一些请求参数
-        }, data => {
-            // data格式如下
-            /* {
-                abstract: {
-                    label: '简介',
-                    hint: '请输入简介',
-                    value: '',
-                    rules: [{
-                        type: 'string',
-                        options: {
-                            message: '姓名必须是一条字符串。',
-                            skipOnEmpty: 1,
-                        }
-                    }]
-                }
-            } */
-            this.model.load(data);
-        });
+        // data 也可以是后端接口返回
+        const data = {
+            name: {
+                label: '姓名',
+                hint: '请输入姓名',
+                value: '',
+                rules: [{
+                    type: 'string',
+                    options: {
+                        message: '姓名必须是一条字符串。',
+                        skipOnEmpty: 1,
+                    }
+                }, {
+                    type: 'required',
+                    options: {
+                        message: '请填写姓名'
+                    }
+                }]
+            },
+            introduce: {
+                label: '简介',
+                hint: '请输入简介',
+                value: '',
+                rules: [{
+                    type: 'string',
+                    options: {
+                        max: 200,
+                        message: '姓名必须是一条字符串。',
+                        skipOnEmpty: 1,
+                        tooLong: '姓名只能包含至多200个字符。'
+                    }
+                }]
+            }
+        };
+        this.model.load(data);
+    },
+    methods: {
+        submit() {
+            this.model.validate();
+            if (!this.model.hasError()) {
+                // 将 this.model 提交
+            }
+        }
     }
 }
 </script>

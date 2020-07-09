@@ -196,6 +196,7 @@ model 的属性值是指定的 list 中的一部分。
 |message|String|''|是||
 |skipOnEmpty|boolean \| Number|true|否||
 |list|Object|-|是|指定的的范围|
+|order|Array|Object.keys(list)|否|指定 list 的展示顺序|
 |multiple|boolean|false|否|被验证数据是否允许为数组|
 |excludes|Array|[]|否|被验证数据不能包含在此数组中|
 |min|Number|-|否|指定最小选项数，若不符合规则则错误信息为 tooSmall 的值|

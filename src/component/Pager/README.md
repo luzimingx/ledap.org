@@ -28,12 +28,55 @@ pager 组件为翻页器组件，一般配合列表使用。
 |changePage|Function|切换页码的方法，如changePage(10)|
 
 
-## 示例
+## [示例](https://widget.ethercap.com/ledap/default/grid)
 ```vue
 <template lang="html">
 <div>
-    <!-->这里是列表<-->
-    <pager data-provider="dp"></pager>
+    <grid class="table table-striped" :data-provider="dp" :columns="columns"></grid>
 </div>
 </template>
+
+<script>
+import * as Ledap from 'ledap';
+const DataProvider = Ledap.DataProvider;
+
+export default {
+    data() {
+        return {
+            asc: true,
+            dp: ledap.App.getWebDp({
+                httpOptions: {
+                    url: '/ledap/lesson/search',
+                    params: {
+                        'per-page': 5
+                    }
+                }
+            }),
+            columns: [{
+                attribute: 'id',
+                labelFormat: 'html',
+                "label": function(model, attribute) {
+                    // 使用 vm 指向本页面实例
+                    return '<div @click="vm.toggle">ID<span>{{vm.asc ? "^" : "v"}}</span></div>';
+                },
+                labelOptions: {
+                    style: { color: 'green' }
+                }
+            }, {
+                attribute: 'text',
+                label: '名称'
+            }]
+        }
+    },
+    created: function() {
+        this.dp.refresh();
+    },
+    methods: {
+        toggle: function() {
+            this.asc = !this.asc;
+            this.dp.sortModels("id", this.asc);
+        },
+    }
+}
+</script>
 ```
