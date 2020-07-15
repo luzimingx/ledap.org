@@ -1,6 +1,6 @@
 ---
 home: true
-heroImage: null
+heroImage: /logo.png
 heroText: Ledap
 tagline: 好用的前后端解耦方案
 actionText: 快速上手 →
