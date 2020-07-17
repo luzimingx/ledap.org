@@ -51,7 +51,7 @@ form-item 的默认表单元素是 input，因此你可以向其传入所有 inp
 |focus|获得焦点|\(event: Event\)|
 
 
-## [示例](https://widget.ethercap.com/ledap/default/form-item)
+## [示例](https://widget.ethercap.com/ledap/default/formitem)
 ```vue
 <template lang="html">
 <div>
