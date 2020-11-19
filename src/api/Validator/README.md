@@ -6,7 +6,7 @@ Validator 是 Ledap 的验证器，可以根据参数返回一个特定的验证
 |属性|类型|说明|
 |:-:|:-:|:-:|
 |type|String|验证器的类型|
-|options|Object|[验证器分类](/api/Validator/#验证器分类)|
+|options|Object|[验证器分类](/api/Validator/#验证器分类)，如果某种类型里 options 里面的字段都是非必填项，则 options 可省略，如 string、required、emai 等|
 
 
 ## 获取验证器
@@ -43,10 +43,10 @@ model.validate('name');    // true
 
 |属性|类型|默认值|是否必填|说明|
 |:-:|:-:|:-:|:-:|:-:|:-:|
-|message|String|''|是||
+|message|String|'xx应该为布尔型'|否||
 |skipOnEmpty|boolean \| Number|true|否||
 |trueValue|any|true|否|表示真值|
-|falseValue|any|true|否|表示假值|
+|falseValue|any|false|否|表示假值|
 |strict|boolean|false|否|为 true 时，只有数据 === 真值时验证结果才为 true|
 - 示例：
 ```javascript
@@ -66,7 +66,7 @@ model.validate('name');    // true
 
 |属性|类型|默认值|是否必填|说明|
 |:-:|:-:|:-:|:-:|:-:|:-:|
-|message|String|''|是||
+|message|String|'xx的值不合法'|否||
 |skipOnEmpty|boolean \| Number|true|否||
 |is|Number|-|否|指定字符串的长度值，若不符合则错误信息为 notEqual 的值|
 |notEqual|String|'文本内容长度不匹配'|否|is 规则的错误提示信息|
@@ -80,7 +80,7 @@ model.validate('name');    // true
 
 |属性|类型|默认值|是否必填|说明|
 |:-:|:-:|:-:|:-:|:-:|:-:|
-|message|String|''|是||
+|message|String|'xx不是一个合法的数字'|否||
 |skipOnEmpty|boolean \| Number|true|否||
 |pattern|String|\/^\s*[-+]?[0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?\s*$\/|否|数字的正则表达式|
 |max|Number|-|否|指定数值的最大值，若不符合规则则错误信息为 tooBig 的值|
@@ -93,7 +93,7 @@ model.validate('name');    // true
 
 |属性|类型|默认值|是否必填|说明|
 |:-:|:-:|:-:|:-:|:-:|:-:|
-|message|String|''|是||
+|message|String|'xx不能为空'|否||
 |skipOnEmpty|-|true|否|指定无效，恒定为 true|
 |requiredValue|any|-|否|如果设置了该值，则数据应该 == requiredValue，如果为 strict 模式，则应该 ===|
 |strict|boolean|false|否|是否是严格模式|
@@ -111,7 +111,7 @@ model.validate('name');    // true
 
 |属性|类型|默认值|是否必填|说明|
 |:-:|:-:|:-:|:-:|:-:|:-:|
-|message|String|''|是||
+|message|String|'xx格式不正确'|否||
 |skipOnEmpty|boolean \| Number|true|否||
 |pattern|String|-|是|验证的正则表达式|
 |not|boolean|false|否|验证的结果取反|
@@ -121,19 +121,19 @@ model.validate('name');    // true
 
 |属性|类型|默认值|是否必填|说明|
 |:-:|:-:|:-:|:-:|:-:|:-:|
-|message|String|''|是||
+|message|String|'xx的值不合法'|否||
 |skipOnEmpty|boolean \| Number|true|否||
 |operator|String|-|是|比较的操作符，有效值==, >, < , >=, <=,===, !=, !==|
-|type|String|'string'|否|将数组转换成某种类型再进行比较，有效值'strikng'、'number'|
-|compareValue|String \| Number|-|是|与某个值进行比较|
-|compareAttribute|String|-|否|与 model 的某个属性进行比较|
+|type|String|'string'|否|将数组转换成某种类型再进行比较，有效值'string'、'number'|
+|compareAttribute|String|undefined|否|与 model 的某个属性进行比较，当与 compareValue 同时存在时，compareAttribute 优先级更高|
+|compareValue|String \| Number|undefined|否|与某个值进行比较|
 
 ### email
 - options
 
 |属性|类型|默认值|是否必填|说明|
 |:-:|:-:|:-:|:-:|:-:|:-:|
-|message|String|''|是||
+|message|String|'xx不是一个合法的邮箱格式'|否||
 |skipOnEmpty|boolean \| Number|true|否||
 |pattern|String|略|否|验证邮箱的正则表达式，例如：john@example.com|
 |fullPattern|String|略|否|验证全称邮箱的正则表达式，例如：john <john@example.com>|
@@ -147,7 +147,7 @@ model.validate('name');    // true
 
 |属性|类型|默认值|是否必填|说明|
 |:-:|:-:|:-:|:-:|:-:|:-:|
-|message|String|''|是||
+|message|String|'xx的值不合法'|否||
 |skipOnEmpty|boolean \| Number|true|否||
 |range|Array|-|是|指定的数组|
 |allowArray|boolean|false|否|是否允许验证的值是指定数组的子元素|
@@ -158,7 +158,7 @@ model.validate('name');    // true
 
 |属性|类型|默认值|是否必填|说明|
 |:-:|:-:|:-:|:-:|:-:|:-:|
-|message|String|''|是||
+|message|String|'xx的值不合法'|否||
 |skipOnEmpty|boolean \| Number|true|否||
 |pattern|String|略|否|验证额正则表达式|
 |enableIDN|boolean|false|否|是否支持IDN|
@@ -193,7 +193,7 @@ model 的属性值是指定的 list 中的一部分。
 
 |属性|类型|默认值|是否必填|说明|
 |:-:|:-:|:-:|:-:|:-:|:-:|
-|message|String|''|是||
+|message|String|'xx的值不合法'|否||
 |skipOnEmpty|boolean \| Number|true|否||
 |list|Object|-|是|指定的的范围|
 |order|Array|Object.keys(list)|否|指定 list 的展示顺序|
