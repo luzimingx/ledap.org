@@ -20,4 +20,4 @@ model.load({
 ```
 
 ## 文档
-[文档](http://luzimingx.com/ledap.org/)
+[文档](https://luzimingx.github.io/ledap.org/)
